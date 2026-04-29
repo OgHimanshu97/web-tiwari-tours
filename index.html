@@ -799,7 +799,12 @@
       const userProfile = document.getElementById('user-profile');
       const mobileLogin = document.getElementById('mobile-login-link');
       const mobileAction = document.getElementById('mobile-action-container');
+      const navbarLinks = document.getElementById('navbar-links');
       
+      // Clean up previous dynamic mobile links to avoid duplicates
+      const dynamicLinks = navbarLinks.querySelectorAll('.dynamic-mobile-link');
+      dynamicLinks.forEach(link => link.remove());
+
       if (user) {
         const isAdmin = user.email === "princetiwari8226@gmail.com";
         const userDisplayName = user.displayName || user.email.split('@')[0];
@@ -821,6 +826,12 @@
           mobileLogin.innerHTML = `<span style="text-transform: none; color: white;">Hi, ${userDisplayName}</span>`;
           mobileLogin.href = "#";
           mobileLogin.style.pointerEvents = "none";
+          
+          // Add Admin & Logout to Mobile Drawer
+          const adminLi = isAdmin ? `<li class="mobile-only-link dynamic-mobile-link"><a href="admin.html" style="color: var(--accent-primary); font-weight: 600;">Admin Dashboard</a></li>` : '';
+          const logoutLi = `<li class="mobile-only-link dynamic-mobile-link"><a href="#" onclick="auth.signOut().then(() => window.location.reload())" style="color: #ff4444;">Logout</a></li>`;
+          
+          mobileLogin.parentElement.insertAdjacentHTML('afterend', adminLi + logoutLi);
         }
       } else {
         // Guest - Desktop

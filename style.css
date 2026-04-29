@@ -289,7 +289,7 @@ button {
   display: flex !important;
 }
 
-.mobile-only {
+.mobile-only, .mobile-only-link {
   display: none !important;
 }
 
@@ -297,7 +297,7 @@ button {
   .desktop-only {
     display: none !important;
   }
-  .mobile-only {
+  .mobile-only, .mobile-only-link {
     display: flex !important;
   }
 }
