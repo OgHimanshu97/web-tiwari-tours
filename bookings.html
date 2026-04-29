@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Bookings | Tiwari Tour & Travels</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .back-home-navbar {
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: var(--transition-smooth);
+      background: white;
+      padding: 12px 24px;
+      border-radius: 50px;
+      width: fit-content;
+      box-shadow: var(--shadow-soft);
+      margin-bottom: 40px;
+    }
+
+    .back-home-navbar:hover {
+      color: var(--accent-primary);
+      transform: translateX(-5px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .bookings-page {
+      background-color: var(--bg-primary);
+      min-height: 100vh;
+    }
+
+    .bookings-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 60px 24px;
+    }
+
+    .page-header {
+      margin-bottom: 48px;
+      text-align: center;
+    }
+
+    .page-title {
+      font-size: 3rem;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+    }
+
+    .page-subtitle {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+    }
+
+    .bookings-list {
+      display: grid;
+      gap: 24px;
+    }
+
+    .booking-card-premium {
+      background: white;
+      border-radius: 20px;
+      padding: 32px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 32px;
+      align-items: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      transition: var(--transition-smooth);
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .booking-card-premium:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      border-color: var(--accent-primary);
+    }
+
+    .vehicle-icon-box {
+      width: 80px;
+      height: 80px;
+      background: var(--bg-secondary);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+    }
+
+    .booking-main-info h3 {
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+      font-family: var(--font-body);
+    }
+
+    .booking-route {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-secondary);
+      font-size: 1rem;
+      margin-bottom: 12px;
+    }
+
+    .route-arrow {
+      color: var(--accent-primary);
+      font-weight: bold;
+    }
+
+    .booking-meta {
+      display: flex;
+      gap: 24px;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-container {
+      text-align: right;
+    }
+
+    .premium-badge {
+      padding: 8px 20px;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+
+    .status-pending {
+      background: #FFF4E5;
+      color: #FF9800;
+    }
+
+    .status-confirmed {
+      background: #E8F5E9;
+      color: #4CAF50;
+    }
+
+    .booking-id {
+      display: block;
+      font-size: 0.75rem;
+      color: #CCC;
+      font-family: monospace;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 100px 24px;
+      background: white;
+      border-radius: 30px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .empty-state h3 {
+      font-size: 1.5rem;
+      margin-bottom: 16px;
+    }
+
+    .back-home-btn {
+      margin-top: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .booking-card-premium {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 20px;
+      }
+      .vehicle-icon-box {
+        margin: 0 auto;
+      }
+      .booking-route {
+        justify-content: center;
+      }
+      .booking-meta {
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .status-container {
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body class="bookings-page">
+  <div class="bookings-container">
+    <a href="index.html" class="back-home-navbar">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      <span>Back to Home</span>
+    </a>
+
+    <header class="page-header">
+      <h1 class="page-title">Your Journeys</h1>
+      <p class="page-subtitle">Track the status of your premium travel requests</p>
+    </header>
+
+    <div id="premium-bookings-list" class="bookings-list">
+      <!-- Loading state -->
+      <div class="empty-state">
+        <p>Loading your bookings...</p>
+      </div>
+    </div>
+    
+    <div class="text-center" style="margin-top: 48px;">
+      <a href="index.html#booking" class="btn-primary">Request New Quote</a>
+    </div>
+  </div>
+
+  <!-- Firebase Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  
+  <script>
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBC1HjR6nvdVZDEXWi7tZaADo0qC2juI0Q",
+      authDomain: "tiwari-travels-64134.firebaseapp.com",
+      projectId: "tiwari-travels-64134",
+      storageBucket: "tiwari-travels-64134.firebasestorage.app",
+      messagingSenderId: "776795933650",
+      appId: "1:776795933650:web:65bce6c89326847e80560b",
+      measurementId: "G-EC0JZKXX8G"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        fetchBookings(user.uid);
+      } else {
+        window.location.href = 'login.html';
+      }
+    });
+
+    async function fetchBookings(userId) {
+      const listEl = document.getElementById('premium-bookings-list');
+      try {
+        const snapshot = await db.collection('bookings')
+          .where('userId', '==', userId)
+          .get();
+
+        if (snapshot.empty) {
+          listEl.innerHTML = `
+            <div class="empty-state">
+              <h3>No Bookings Yet</h3>
+              <p>You haven't requested any quotes. Start your journey today!</p>
+              <a href="index.html#booking" class="btn-primary back-home-btn">Book Now</a>
+            </div>
+          `;
+          return;
+        }
+
+        const docs = snapshot.docs.sort((a, b) => {
+          const aTime = a.data().createdAt?.seconds || 0;
+          const bTime = b.data().createdAt?.seconds || 0;
+          return bTime - aTime;
+        });
+
+        const vehicleIcons = {
+          economy: '🚗',
+          sedan: '🏙️',
+          muv: '🚐',
+          suv: '🚙',
+          luxury_suv: '👑',
+          group: '🚌'
+        };
+
+        listEl.innerHTML = docs.map(doc => {
+          const data = doc.data();
+          const dateStr = data.createdAt ? new Date(data.createdAt.seconds * 1000).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Processing...';
+          const icon = vehicleIcons[data.vehicle] || '🚗';
+          
+          return `
+            <div class="booking-card-premium">
+              <div class="vehicle-icon-box">${icon}</div>
+              <div class="booking-main-info">
+                <div class="booking-route">
+                  <span>${data.pickup}</span>
+                  <span class="route-arrow">→</span>
+                  <span>${data.destination}</span>
+                </div>
+                <h3>${data.vehicle.toUpperCase()} Journey</h3>
+                <div class="booking-meta">
+                  <div class="meta-item">📅 ${data.date}</div>
+                  <div class="meta-item">🕒 ${data.time}</div>
+                  <div class="meta-item">📱 ${data.phone}</div>
+                </div>
+              </div>
+              <div class="status-container">
+                <span class="premium-badge status-${data.status}">${data.status}</span>
+                <span class="booking-id">ID: ${doc.id.substring(0, 8).toUpperCase()}</span>
+                <p style="font-size: 0.8rem; color: #999; margin-top: 8px;">Requested: ${dateStr}</p>
+                <a href="https://wa.me/919555573001?text=Hi Tiwari Travels, I want to check status of my booking ID: ${doc.id.substring(0, 8).toUpperCase()} from ${data.pickup} to ${data.destination}" class="whatsapp-track-btn" target="_blank">
+                  Track on WhatsApp
+                </a>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (error) {
+        console.error("Error fetching bookings:", error);
+        listEl.innerHTML = '<div class="empty-state"><p>Error loading bookings. Please refresh.</p></div>';
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard | Tiwari Tour & Travels</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .admin-page {
+      background-color: #f0f2f5;
+      min-height: 100vh;
+      padding-top: 120px;
+    }
+
+    .admin-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+      background: white;
+      padding: 24px 40px;
+      border-radius: 20px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .dashboard-title {
+      font-size: 2rem;
+      color: var(--text-primary);
+    }
+
+    .admin-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 24px;
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .stat-card h4 {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+    }
+
+    .stat-card p {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+    }
+
+    .bookings-table-container {
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--shadow-soft);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th {
+      background: var(--bg-dark);
+      color: white;
+      padding: 16px 24px;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+
+    td {
+      padding: 16px 24px;
+      border-bottom: 1px solid #eee;
+      font-size: 0.9rem;
+    }
+
+    tr:hover {
+      background: #f9f9f9;
+    }
+
+    .status-select {
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 0.8rem;
+    }
+
+    .btn-update {
+      background: var(--accent-primary);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+
+    .btn-update:disabled {
+      background: #ccc;
+    }
+
+    .customer-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .customer-email {
+      font-size: 0.75rem;
+      color: #888;
+    }
+
+    .unauthorized {
+      text-align: center;
+      padding: 100px 24px;
+    }
+    .back-home-navbar {
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: color 0.3s ease;
+      margin-right: 24px;
+    }
+
+    .back-home-navbar:hover {
+      color: var(--accent-primary);
+    }
+  </style>
+</head>
+<body class="admin-page">
+  
+  <nav class="top-navbar">
+    <div class="navbar-inner">
+      <div style="display: flex; align-items: center;">
+        <a href="index.html" class="back-home-navbar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span class="desktop-only">Back to Home</span>
+        </a>
+        <a href="index.html" class="navbar-logo">
+          <img src="public/images/logo.png" alt="Logo">
+        </a>
+      </div>
+      <div id="user-profile" class="navbar-user">
+        <!-- Injected by script -->
+      </div>
+    </div>
+  </nav>
+
+  <div id="admin-content" class="admin-container" style="display: none;">
+    <header class="dashboard-header">
+      <h1 class="dashboard-title">All Bookings</h1>
+      <button onclick="window.location.reload()" class="btn-primary" style="padding: 10px 20px;">Refresh Data</button>
+    </header>
+
+    <div class="admin-stats">
+      <div class="stat-card">
+        <h4>Total Requests</h4>
+        <p id="stat-total">0</p>
+      </div>
+      <div class="stat-card">
+        <h4>Pending</h4>
+        <p id="stat-pending">0</p>
+      </div>
+      <div class="stat-card">
+        <h4>Confirmed</h4>
+        <p id="stat-confirmed">0</p>
+      </div>
+    </div>
+
+    <div class="bookings-table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Customer</th>
+            <th>Route</th>
+            <th>Schedule</th>
+            <th>Vehicle</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="admin-bookings-list">
+          <!-- Bookings injected here -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="unauthorized-msg" class="unauthorized" style="display: none;">
+    <h1>Access Denied</h1>
+    <p>You do not have administrative privileges.</p>
+    <a href="index.html" class="btn-primary" style="margin-top: 20px;">Return Home</a>
+  </div>
+
+  <!-- Firebase Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  
+  <script>
+    const ADMIN_EMAIL = "princetiwari8226@gmail.com"; // Updated admin email
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBC1HjR6nvdVZDEXWi7tZaADo0qC2juI0Q",
+      authDomain: "tiwari-travels-64134.firebaseapp.com",
+      projectId: "tiwari-travels-64134",
+      storageBucket: "tiwari-travels-64134.firebasestorage.app",
+      messagingSenderId: "776795933650",
+      appId: "1:776795933650:web:65bce6c89326847e80560b",
+      measurementId: "G-EC0JZKXX8G"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    auth.onAuthStateChanged((user) => {
+      const userProfile = document.getElementById('user-profile');
+      if (user && user.email === ADMIN_EMAIL) {
+        userProfile.innerHTML = `
+          <span class="user-name">Admin</span>
+          <button onclick="auth.signOut().then(() => window.location.href='index.html')" class="logout-btn">Logout</button>
+        `;
+        document.getElementById('admin-content').style.display = 'block';
+        fetchAllBookings();
+      } else {
+        document.getElementById('unauthorized-msg').style.display = 'block';
+      }
+    });
+
+    async function fetchAllBookings() {
+      const listEl = document.getElementById('admin-bookings-list');
+      try {
+        const snapshot = await db.collection('bookings').orderBy('createdAt', 'desc').get();
+        
+        let total = 0, pending = 0, confirmed = 0;
+        
+        listEl.innerHTML = snapshot.docs.map(doc => {
+          const data = doc.data();
+          total++;
+          if (data.status === 'pending') pending++;
+          if (data.status === 'confirmed') confirmed++;
+
+          return `
+            <tr id="row-${doc.id}">
+              <td>
+                <div class="customer-info">
+                  <strong>${data.phone}</strong>
+                  <span class="customer-email">${data.userEmail || 'Guest'}</span>
+                </div>
+              </td>
+              <td>${data.pickup} → ${data.destination}</td>
+              <td>${data.date}<br><small>${data.time}</small></td>
+              <td>${data.vehicle.toUpperCase()}</td>
+              <td>
+                <select class="status-select" id="status-${doc.id}">
+                  <option value="pending" ${data.status === 'pending' ? 'selected' : ''}>Pending</option>
+                  <option value="confirmed" ${data.status === 'confirmed' ? 'selected' : ''}>Confirmed</option>
+                  <option value="cancelled" ${data.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+                </select>
+              </td>
+              <td>
+                <div style="display: flex; gap: 8px;">
+                  <button class="btn-update" onclick="updateStatus('${doc.id}')">Update</button>
+                  <button class="btn-update" style="background: #ff4444;" onclick="deleteBooking('${doc.id}')">Remove</button>
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join('');
+
+        document.getElementById('stat-total').textContent = total;
+        document.getElementById('stat-pending').textContent = pending;
+        document.getElementById('stat-confirmed').textContent = confirmed;
+
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    }
+
+    async function updateStatus(docId) {
+      const newStatus = document.getElementById(`status-${docId}`).value;
+      const btn = document.querySelector(`#row-${docId} .btn-update`);
+      
+      btn.disabled = true;
+      btn.textContent = '...';
+
+      try {
+        await db.collection('bookings').doc(docId).update({
+          status: newStatus
+        });
+        btn.textContent = 'Updated!';
+        setTimeout(() => {
+          btn.disabled = false;
+          btn.textContent = 'Update';
+        }, 2000);
+      } catch (error) {
+        alert("Error updating status: " + error.message);
+        btn.disabled = false;
+        btn.textContent = 'Update';
+      }
+    }
+
+    async function deleteBooking(docId) {
+      if (!confirm("Are you sure you want to remove this booking? This cannot be undone.")) return;
+
+      try {
+        await db.collection('bookings').doc(docId).delete();
+        document.getElementById(`row-${docId}`).remove();
+        // Update stats
+        const total = parseInt(document.getElementById('stat-total').textContent);
+        document.getElementById('stat-total').textContent = total - 1;
+      } catch (error) {
+        alert("Error removing booking: " + error.message);
+      }
+    }
+  </script>
+</body>
+</html>

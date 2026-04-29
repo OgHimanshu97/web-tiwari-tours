@@ -1,0 +1,11 @@
+{
+  "name": "tiwari-travels",
+  "version": "1.0.0",
+  "description": "Luxury Travel Agency Website",
+  "scripts": {
+    "start": "echo 'This is a static site. Open index.html in a browser.'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
