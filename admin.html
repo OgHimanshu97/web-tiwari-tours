@@ -142,6 +142,110 @@
     .back-home-navbar:hover {
       color: var(--accent-primary);
     }
+
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+      .admin-page {
+        padding-top: 100px;
+      }
+      
+      .admin-container {
+        padding: 20px 15px;
+      }
+
+      .dashboard-header {
+        flex-direction: column;
+        gap: 15px;
+        padding: 20px;
+        text-align: center;
+      }
+
+      .dashboard-title {
+        font-size: 1.5rem;
+      }
+
+      /* Responsive Table to Cards */
+      .bookings-table-container {
+        background: transparent;
+        box-shadow: none;
+        overflow: visible;
+      }
+
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+
+      thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+      }
+
+      tr {
+        background: white;
+        margin-bottom: 20px;
+        border-radius: 16px;
+        padding: 15px;
+        box-shadow: var(--shadow-soft);
+        border: 1px solid #eee;
+      }
+
+      td {
+        border: none;
+        border-bottom: 1px solid #f5f5f5;
+        position: relative;
+        padding: 12px 0 12px 40%;
+        text-align: right;
+        font-size: 0.85rem;
+      }
+
+      td:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+
+      td:before {
+        position: absolute;
+        top: 12px;
+        left: 0;
+        width: 35%;
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: 600;
+        color: var(--text-secondary);
+        content: attr(data-label);
+      }
+
+      .customer-info {
+        align-items: flex-end;
+      }
+
+      .status-select {
+        width: 100%;
+        max-width: 150px;
+      }
+
+      td[data-label="Action"] {
+        padding-left: 0;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+      }
+
+      td[data-label="Action"]:before {
+        display: none;
+      }
+      
+      .stat-card {
+        padding: 15px;
+      }
+      
+      .stat-card p {
+        font-size: 1.2rem;
+      }
+    }
   </style>
 </head>
 <body class="admin-page">
@@ -260,23 +364,23 @@
 
           return `
             <tr id="row-${doc.id}">
-              <td>
+              <td data-label="Customer">
                 <div class="customer-info">
-                  <strong>${data.phone}</strong>
-                  <span class="customer-email">${data.userEmail || 'Guest'}</span>
+                   <strong>${data.phone}</strong>
+                   <span class="customer-email">${data.userEmail || 'Guest'}</span>
                 </div>
               </td>
-              <td>${data.pickup} → ${data.destination}</td>
-              <td>${data.date}<br><small>${data.time}</small></td>
-              <td>${data.vehicle.toUpperCase()}</td>
-              <td>
+              <td data-label="Route">${data.pickup} → ${data.destination}</td>
+              <td data-label="Schedule">${data.date}<br><small>${data.time}</small></td>
+              <td data-label="Vehicle">${data.vehicle.toUpperCase()}</td>
+              <td data-label="Status">
                 <select class="status-select" id="status-${doc.id}">
                   <option value="pending" ${data.status === 'pending' ? 'selected' : ''}>Pending</option>
                   <option value="confirmed" ${data.status === 'confirmed' ? 'selected' : ''}>Confirmed</option>
                   <option value="cancelled" ${data.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
                 </select>
               </td>
-              <td>
+              <td data-label="Action">
                 <div style="display: flex; gap: 8px;">
                   <button class="btn-update" onclick="updateStatus('${doc.id}')">Update</button>
                   <button class="btn-update" style="background: #ff4444;" onclick="deleteBooking('${doc.id}')">Remove</button>
@@ -307,6 +411,8 @@
           status: newStatus
         });
         btn.textContent = 'Updated!';
+        // Refresh stats
+        fetchAllBookings();
         setTimeout(() => {
           btn.disabled = false;
           btn.textContent = 'Update';
@@ -323,10 +429,8 @@
 
       try {
         await db.collection('bookings').doc(docId).delete();
-        document.getElementById(`row-${docId}`).remove();
-        // Update stats
-        const total = parseInt(document.getElementById('stat-total').textContent);
-        document.getElementById('stat-total').textContent = total - 1;
+        // Refresh the whole list and stats to ensure everything is accurate
+        fetchAllBookings();
       } catch (error) {
         alert("Error removing booking: " + error.message);
       }
